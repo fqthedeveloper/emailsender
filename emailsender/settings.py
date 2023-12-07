@@ -81,18 +81,6 @@ WSGI_APPLICATION = 'emailsender.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'mssql',
-        'NAME': 'django-email-sent',
-        'USER': 'sa',
-        'PASSWORD': '28@%93@%34@%5gs3$2893',
-        'HOST': '219.90.67.37\SQLEXPRESS',
-        'PORT': '16555',
-        'OPTIONS': {'driver': 'ODBC Driver 17 for SQL Server', 
-        },
-    },
-}
 
 
 # Password validation

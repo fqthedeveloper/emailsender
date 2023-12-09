@@ -53,25 +53,36 @@ def emailsent(request):
     return render(request, 'success_emailsend.html',context)
 
 
+
 def send_email_from_url(request):
-    recipient_email = request.GET.get('e', '')
+    email = request.GET.get('e', '')
     subject = request.GET.get('s', '')
     message = request.GET.get('msg', '')
+    current_site = get_current_site(request)
+    domain = current_site.domain
 
-    if recipient_email and subject and message:
-        # Send the email
+    if email and subject and message:
+        # Render HTML content from the template
+        html_message = render_to_string('email_template.html', {'subject': subject, 'message': message})
+
+        # Send both HTML and plain text versions of the email
         send_mail(
             subject,
-            message,
-            'your_email@example.com',  # Sender's email address
-            [recipient_email],
+            strip_tags(html_message),
+            'fq118574@gmail.com',
+            [email],
+            html_message=html_message,
             fail_silently=False,
         )
+        
+        context = {
+            'domain': domain,
+            }
 
-        success_message = "Email sent successfully! <a href=`{% url 'home' %}`>Go back to home</a>"
-        return HttpResponse(success_message)
+        return render(request,'success_emailsend.html',context)
 
     else:
         # Return an error message or redirect to an error page
         error_message = "Error: Missing required parameters for sending email."
         return HttpResponse(error_message)
+

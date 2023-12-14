@@ -12,4 +12,5 @@ class Email(models.Model):
 
 
     def __str__(self):
-       return f"{self.email} - {self.sendtime}"
+       return self.email
+    

@@ -3,4 +3,7 @@ from .models import Email
 
 # Register your models here.
 
-admin.site.register(Email)
+
+class EmailAdmin(admin.ModelAdmin):
+    list_display = ('email','subject', 'sendtime')
+admin.site.register(Email, EmailAdmin)

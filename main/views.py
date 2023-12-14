@@ -5,6 +5,8 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from .models import Email
+
 
 def home(request):
     if request.method == 'POST':
@@ -23,7 +25,7 @@ def home(request):
             send_mail(
                 subject,
                 strip_tags(html_message),  # Plain text version
-                'fq118574@gmail.com',  # Sender's email address
+                'ttech.helpdeskindia@gmail',
                 [email],
                 html_message=html_message,  # HTML version
                 fail_silently=False,
@@ -60,29 +62,34 @@ def send_email_from_url(request):
     message = request.GET.get('msg', '')
     current_site = get_current_site(request)
     domain = current_site.domain
-
+   
     if email and subject and message:
         # Render HTML content from the template
         html_message = render_to_string('email_template.html', {'subject': subject, 'message': message})
-
         # Send both HTML and plain text versions of the email
         send_mail(
             subject,
             strip_tags(html_message),
-            'fq118574@gmail.com',
+            'ttech.helpdeskindia@gmail',
             [email],
             html_message=html_message,
             fail_silently=False,
         )
-        
-        context = {
-            'domain': domain,
-            }
 
+        # Save sent email data to the database
+        Email.objects.create(
+            email=email,
+            subject=subject,
+            message=message
+        )
+        context = {
+        'domain': domain,
+             }
         return render(request,'success_emailsend.html',context)
 
     else:
-        # Return an error message or redirect to an error page
-        error_message = "Error: Missing required parameters for sending email."
-        return HttpResponse(error_message)
+        context = {
+        'domain': domain,
+            }
+        return render(request, 'errore_emailsend .html',context)
 

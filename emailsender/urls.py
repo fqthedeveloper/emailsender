@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from main.views import home, emailsent, send_email_from_url
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(' /', admin.site.urls),
     path('',home,name='home'),
     path('home/',home,name='home'),
     path('send_email',home,name='send_email'),
@@ -27,3 +29,5 @@ urlpatterns = [
     path('emailsenturl/',send_email_from_url,name='send_email_from_url'),
 
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
